@@ -21,7 +21,8 @@ def plot_spectrogram(duration_start_seconds, duration_end_seconds, audio_data, s
     ax.set(title='Spectrum')
     fig.colorbar(img, ax=ax, format="%+2.f dB")
     ax.legend(loc='upper right')
-    plt.show()
+
+    return fig, ax
 
 
 if __name__ == '__main__':
