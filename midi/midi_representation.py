@@ -30,14 +30,7 @@ class Composition:
         return events
 
 
-if __name__ == '__main__':
-    comp = Composition("Test")
-    comp.add_track(1, 1000)
-    t = comp.get_track(1)
-
-    t.add_note_on_event(0, 0, 60, 79)
-    t.add_note_off_event(100, 0, 60)
-
+def make_midi(comp : Composition):
     fin = comp.finalize()
     csv_data = '\n'.join(fin)
 
@@ -49,3 +42,14 @@ if __name__ == '__main__':
     with open("example_converted.mid", "wb") as output_file:
         midi_writer = pm.FileWriter(output_file)
         midi_writer.write(midi_object)
+
+
+if __name__ == '__main__':
+    comp = Composition("Test")
+    comp.add_track(1, 1000)
+    t = comp.get_track(1)
+
+    t.add_note_on_event(0, 0, 60, 79)
+    t.add_note_off_event(100, 0, 60)
+
+    make_midi(comp)
