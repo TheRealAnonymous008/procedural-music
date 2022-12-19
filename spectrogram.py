@@ -2,20 +2,8 @@ import math
 
 import matplotlib.pyplot as plt
 import numpy as np
-from pydub import AudioSegment
-from scipy.io import wavfile
-from tempfile import mktemp
 
 from frequency_analysis import *
-
-
-def read_file(filename: str):
-    mp3_audio = AudioSegment.from_file(filename, format='mp3')
-    w_name = mktemp('temp.wav')
-    mp3_audio.export(w_name, format='wav')
-    return wavfile.read(w_name)
-
-
 
 
 def plot_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):

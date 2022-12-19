@@ -1,3 +1,4 @@
+from midiio import read_file
 from spectrogram import *
 
 if __name__ == '__main__':
