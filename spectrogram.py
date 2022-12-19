@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pydub import AudioSegment
 from scipy.io import wavfile
+from scipy import fft
 from tempfile import mktemp
 
 
@@ -22,16 +23,24 @@ def get_samples(duration_start_seconds, duration_end_seconds, audio_data, sample
 
 def plot_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):
     samples = get_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second)
-    plt.plot(np.linspace(duration_start_seconds, duration_end_seconds, len(samples)), samples)
+    plt.plot(np.linspace(duration_start_seconds, duration_end_seconds, len(samples)), samples, alpha=0.5)
     plt.show()
 
 
 def plot_spectrogram(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):
     samples = get_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second)
-    plt.specgram(samples[:, 1], Fs=samples_per_second)
+    plt.specgram(samples[:, 1], Fs=samples_per_second, alpha=0.5)
     plt.show()
 
 
+def get_frequencies(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):
+    samples = get_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second)[:, 0]
+    transform = fft.fft(samples)
+    N = len(samples)
+    T = 1.0 / samples_per_second
+    fft_samples = fft.fftfreq(N, T)[:N//2]
+    return N, transform, fft_samples
+
+
 if __name__ == '__main__':
-    sampling_rate, data = read_file('data/piano.mp3')
-    plot_spectrogram(100, 100.1, data, sampling_rate)
+    print("Hello")
