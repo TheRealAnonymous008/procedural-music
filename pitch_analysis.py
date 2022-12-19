@@ -1,4 +1,5 @@
-# TODO: Optimization for speed and polyphonic track support.
+# TODO: Optimization for speed as pYIN is too slow.
+# TODO: Support for polyphonic data
 
 import librosa
 from librosa import pyin
