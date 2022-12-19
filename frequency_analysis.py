@@ -8,7 +8,7 @@ def get_samples(duration_start_seconds, duration_end_seconds, audio_data, sample
 
 
 def get_frequencies(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):
-    samples = get_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second)[:, 0]
+    samples = get_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second)
     transform = fft.fft(samples)
     N = len(samples)
     T = 1.0 / samples_per_second

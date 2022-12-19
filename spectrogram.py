@@ -1,9 +1,10 @@
 import math
 
+from librosa import amplitude_to_db, stft, display
 import matplotlib.pyplot as plt
 import numpy as np
-
 from frequency_analysis import *
+from midiio import read_file
 
 
 def plot_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):
@@ -12,9 +13,13 @@ def plot_samples(duration_start_seconds, duration_end_seconds, audio_data, sampl
     plt.show()
 
 
-def plot_spectrogram(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):
-    samples = get_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second)
-    plt.specgram(samples[:, 1], Fs=samples_per_second, alpha=0.5)
+def plot_spectrogram(dudio_data):
+    D = amplitude_to_db(np.abs(stft(data)), ref=np.max)
+    fig, ax = plt.subplots()
+    img = display.specshow(D, x_axis='time', y_axis='log', ax=ax)
+    ax.set(title='Spectrum')
+    fig.colorbar(img, ax=ax, format="%+2.f dB")
+    ax.legend(loc='upper right')
     plt.show()
 
 
@@ -27,5 +32,5 @@ def plot_frequencies(duration_start_seconds, duration_send_seconds, audio_data, 
 
 
 if __name__ == '__main__':
-    sampling_rate, data = read_file('data/piano.mp3')
-    plot_frequencies(1, 1.5, data, sampling_rate)
+    data, sampling_rate = read_file('data/piano.mp3')
+    plot_spectrogram(data)

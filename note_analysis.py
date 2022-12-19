@@ -6,7 +6,7 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(5, 5))
     for note in NOTES:
-        sampling_rate, data = read_file('data/raw notes/' + note + '.mp3')
+        data, sampling_rate = read_file('data/raw notes/' + note + '.mp3')
         N, transform, fft_samples = get_frequencies(0, 1, data, sampling_rate)
 
         plt.xlim(0, 8000)
