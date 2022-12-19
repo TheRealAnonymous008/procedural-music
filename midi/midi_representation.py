@@ -10,24 +10,40 @@ class Composition:
         self.format = format
         self.division = division
 
-    def add_track(self, track: int):
-        self.tracks.append(Track(int))
+    def add_track(self, track: int, duration: int):
+        self.tracks.append(Track(track, duration))
+
+    def get_track(self, track: int) -> Track:
+        return self.tracks[track - 1]
 
     def finalize(self):
-        header = ','.join(['0', '0', 'Header', str(format), str(len(self.tracks)), str(self.division)])
+        header = ','.join(['0', '0', 'Header', str(self.format), str(len(self.tracks)), str(self.division)])
         eof = ','.join(['0', '0', 'End_of_file'])
 
         events = [header]
         for track in self.tracks:
             events.extend(track.finalize())
 
-        events.sort()
         events += [eof]
         return events
 
 
 if __name__ == '__main__':
-    csv_string = pm.midi_to_csv('../data/sample.midi')
+    comp = Composition("Test")
+    comp.add_track(1, 1000)
+    t = comp.get_track(1)
 
-    with open("example_converted.csv", "w") as f:
-        f.writelines(csv_string)
+    t.add_note_on_event(0, 0, 60, 79)
+    t.add_note_off_event(100, 0, 60)
+
+    fin = comp.finalize()
+    csv_data = '\n'.join(fin)
+
+    with(open("sample.csv", "w")) as output:
+        output.write(csv_data)
+
+    midi_object = pm.csv_to_midi("sample.csv")
+
+    with open("example_converted.mid", "wb") as output_file:
+        midi_writer = pm.FileWriter(output_file)
+        midi_writer.write(midi_object)

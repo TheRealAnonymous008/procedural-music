@@ -2,13 +2,14 @@ class Track:
     def __init__(self, track, duration):
         self.track = track
         self.duration = duration
-        self.midi_events : list(str)= []
+        self.midi_events: list(str)= []
 
     def finalize(self):
         start_track = str(self.track) + ", 0, Start_track"
+        tempo = str(self.track) + ", 0, Tempo, 500000"
         end_track = str(self.track) + ", " + str(self.duration) + ", End_track, "
 
-        events = [start_track] + self.midi_events + [end_track]
+        events = [start_track, tempo] + self.midi_events + [end_track]
         return events
 
     def add_note_on_event(self, time, channel, note, velocity):
