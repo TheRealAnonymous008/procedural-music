@@ -1,6 +1,8 @@
 import py_midicsv as pm
-
 from midi.track import Track
+
+from tempfile import TemporaryFile
+import py_midicsv as pm
 
 
 class Composition:
@@ -39,10 +41,10 @@ if __name__ == '__main__':
     fin = comp.finalize()
     csv_data = '\n'.join(fin)
 
-    with(open("sample.csv", "w")) as output:
+    with TemporaryFile('w+') as output:
         output.write(csv_data)
-
-    midi_object = pm.csv_to_midi("sample.csv")
+        output.seek(0)
+        midi_object = pm.csv_to_midi(output)
 
     with open("example_converted.mid", "wb") as output_file:
         midi_writer = pm.FileWriter(output_file)
