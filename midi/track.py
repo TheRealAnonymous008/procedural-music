@@ -3,13 +3,13 @@ class Track:
         self.track = track
         self.duration = duration
         self.midi_events: list(str)= []
+        self.bpm = 120
 
     def finalize(self):
         start_track = str(self.track) + ", 0, Start_track"
-        tempo = str(self.track) + ", 0, Tempo, 500000"
         end_track = str(self.track) + ", " + str(self.duration) + ", End_track, "
 
-        events = [start_track, tempo] + self.midi_events + [end_track]
+        events = [start_track] + self.midi_events + [end_track]
         return events
 
     def add_note_on_event(self, time, channel, note, velocity):
@@ -38,4 +38,9 @@ class Track:
 
     def add_poly_aftertouch_event(self, time, channel, note, value):
         args = [str(self.track), str(time), "Poly_aftertouch_c", str(channel), str(note), str(value)]
+        self.midi_events.append(','.join(args))
+
+    def add_tempo_event(self, time, bpm):
+        self.bpm = bpm
+        args = [str(self.track), str(time), "Tempo", str(60000000 // bpm)]
         self.midi_events.append(','.join(args))
