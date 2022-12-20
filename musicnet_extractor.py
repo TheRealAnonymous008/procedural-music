@@ -23,19 +23,17 @@ def get_data(wav_path, csv_path):
     music_dataframe = pd.read_csv(csv_path)
 
     music_dataframe
-    WINDOW_SAMPLES = sample_rate * 0.05
+    WINDOW_SAMPLES = sample_rate * 0.01
 
     # For the model, construct the training data as follows:
     music_dataframe_copy = music_dataframe.copy()
     training_data = pd.DataFrame(columns = ['start_time'] + LABEL_COLUMNS + INPUT_COLUMNS)
 
     # Create a linear series where points are WINDOW_SAMPLES apart from each other. 
-    serialized_data = []
     xs = np.linspace(0, len(data), int (len(data) / WINDOW_SAMPLES), endpoint=False)
 
     # Iterate over the music dataframe. Construct a one hot encoded vector for this particular time based on the note value
     # At the given time.
-    i = 0
 
     for x in xs:
         notes_on = music_dataframe_copy.query("start_time <= " + str(int(x))).query("end_time >= " + str(int(x)))
