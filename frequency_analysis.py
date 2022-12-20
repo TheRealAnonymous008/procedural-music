@@ -1,6 +1,8 @@
-from scipy import fft
+import numpy as np
 from scipy.signal import welch
+from sklearn.preprocessing import StandardScaler, minmax_scale
 
+scaler = StandardScaler()
 
 def get_samples(duration_start_seconds, duration_end_seconds, audio_data, samples_per_second):
     sample_start = duration_start_seconds * samples_per_second
@@ -9,10 +11,11 @@ def get_samples(duration_start_seconds, duration_end_seconds, audio_data, sample
 
 
 def get_frequencies(audio_data, samples_per_second):
-    f, s  = welch(audio_data, 
+    f, power  = welch(audio_data, 
         fs=samples_per_second, 
         detrend=False,
         nfft=512, 
     )
 
-    return f, s
+    power = scaler.fit_transform(power.reshape((-1, 1))).reshape(-1)
+    return f, power
