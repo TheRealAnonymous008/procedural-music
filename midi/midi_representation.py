@@ -39,7 +39,7 @@ def make_midi(comp : Composition):
         output.seek(0)
         midi_object = pm.csv_to_midi(output)
 
-    with open("example_converted.mid", "wb") as output_file:
+    with open(comp.name + ".mid", "wb") as output_file:
         midi_writer = pm.FileWriter(output_file)
         midi_writer.write(midi_object)
 
