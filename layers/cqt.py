@@ -49,8 +49,6 @@ class CQT(Layer):
         return super().build(input_shape)
 
     def call(self, inputs : tf.Tensor) -> tf.Tensor:
-        
-        tf.debugging.Assert(tf.shape(inputs).shape == 1, inputs, 10)
 
         cqt_results = librosa.cqt(
             np.array(inputs), 
