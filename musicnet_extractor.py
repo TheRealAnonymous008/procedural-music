@@ -23,7 +23,7 @@ def get_data(wav_path, csv_path):
     music_dataframe = pd.read_csv(csv_path)
 
     music_dataframe
-    WINDOW_SAMPLES = sample_rate * 0.01
+    WINDOW_SAMPLES = sample_rate * 0.05
 
     # For the model, construct the training data as follows:
     music_dataframe_copy = music_dataframe.copy()
@@ -36,7 +36,7 @@ def get_data(wav_path, csv_path):
     # At the given time.
 
     for x in xs:
-        notes_on = music_dataframe_copy.query("start_time <= " + str(int(x))).query("end_time >= " + str(int(x)))
+        notes_on = music_dataframe_copy.query("start_time <= " + str(int(x)))
         music_dataframe_copy.drop(notes_on.index, axis='index', inplace=True)
         
         note_vec = [0 for i in range(MIDI_START, MIDI_END + 1)]

@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.signal import welch
-from sklearn.preprocessing import StandardScaler, minmax_scale
+from scipy.fft import fft
+from sklearn.preprocessing import StandardScaler
 
 scaler = StandardScaler()
 
@@ -15,6 +16,7 @@ def get_frequencies(audio_data, samples_per_second):
         fs=samples_per_second, 
         detrend=False,
         nfft=512, 
+        scaling="spectrum"
     )
 
     power = scaler.fit_transform(power.reshape((-1, 1))).reshape(-1)

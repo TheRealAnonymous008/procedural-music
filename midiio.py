@@ -2,5 +2,5 @@ import librosa
 
 
 def read_file(filename: str):
-    return librosa.load(filename, mono=False, sr=44100)
+    return librosa.load(filename, mono=False, sr=None)
 
