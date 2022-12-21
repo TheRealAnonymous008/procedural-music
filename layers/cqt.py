@@ -2,6 +2,7 @@ from tensorflow.keras.layers import Layer
 import tensorflow as tf
 import numpy as np
 import librosa 
+import tensorflow.keras.backend as K
 
 class CQT(Layer):
     def __init__(self, 
@@ -12,7 +13,7 @@ class CQT(Layer):
             sr:int = 44100,
             n_octaves: int = 7,
             bins_per_semitone: int = 3,
-            hop_length_ms: int = 11
+            hop_length: int= 512
         ):
         """
             Apply Constant Q Transform to a given tensor
@@ -24,31 +25,37 @@ class CQT(Layer):
             sr := sample rate to be used (defaults to 44100)
             n_octaves := number of octaves.
             bins_per_semitone := number of bins associated with each semitone
-            hop_length_ms := hop length to use for CQT in ms. Internally, this gets converted to sample rate.
+            hop_length := hop length to use for CQT in samples. 
         """
 
         self.sr = sr 
         self.n_octaves = n_octaves
         self.bins_per_semitone = bins_per_semitone
-        self.hop_length_ms = hop_length_ms
+        self.hop_length = hop_length
 
         super().__init__(trainable, name, dtype, dynamic)
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            "sr": self.sr,
+            "n_octaves": self.n_octaves,
+            "bins_per_semitone": self.bins_per_semitone,
+            "hop_length": self.hop_length
+        })
+        return config
 
     def build(self, input_shape : tf.TensorShape):
         return super().build(input_shape)
 
     def call(self, inputs : tf.Tensor) -> tf.Tensor:
-        tf.debugging.Assert(len(inputs.shape) == 1, inputs, 10)
-
-        super().call(inputs)
-
-        hop_length = int(self.sr * self.hop_length_ms/1000.0)
-        hop_length = hop_length - (hop_length % 4)
+        
+        tf.debugging.Assert(tf.shape(inputs).shape == 1, inputs, 10)
 
         cqt_results = librosa.cqt(
             np.array(inputs), 
             sr=self.sr, 
-            hop_length=hop_length, 
+            hop_length=self.hop_length, 
             n_bins=self.bins_per_semitone * self.n_octaves * 12, 
             bins_per_octave=self.bins_per_semitone * 12)
 
