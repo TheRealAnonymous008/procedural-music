@@ -12,11 +12,35 @@ class Transcriber(Model):
 
         self.cqt = CQT()
         self.harmonic_stack = HarmonicStacking(harmonics=harmonics)
-        # self.dense = layers.Dense(1)
-    
+        
+        self.convolutional_stack = [
+            [
+                layers.Conv2D(16, (5, 5)),
+                layers.BatchNormalization(),
+                layers.ReLU()
+            ], 
+            [
+                layers.Conv2D(8, (3, 39)),
+                layers.BatchNormalization(),
+                layers.ReLU()
+            ],
+            [
+                layers.Conv2D(1, (5, 5), activation=tf.nn.sigmoid)
+            ]
+        ]
+
+        self.pseudo = layers.Dense(1)
+
     def call(self, inputs : tf.Tensor):
         x = self.cqt(inputs)
         x = self.harmonic_stack(x)
-        # x = self.dense(x)
 
-        return x
+        for conv in self.convolutional_stack:
+            for layer in conv:
+                x = layer(x)
+
+        x = self.pseudo(x)
+        
+        return {
+            "yn" : tf.unstack(x, axis=-1)
+        }
